@@ -5,11 +5,12 @@
 #include <opencv2/opencv.hpp>
 #include "opencv2/core/core.hpp"
 
+#include "FaceDetection.h"
+
 using namespace cv;
 using namespace std;
 
 
-Mat detectFace(Mat, CascadeClassifier );
 Mat fourierSpectrum(Mat frame);
 void measureContrast(Mat);
 void histogram(Mat);
@@ -36,31 +37,25 @@ double variance_of_laplacian(Mat image){
 
 int main()
 {
-	CascadeClassifier faceCascade;
-
-	// Load the cascade
-	if (!faceCascade.load("haarcascade_frontalface_default.xml")){
-		printf("--(!)Error loading\n");
-		return (-1);
-	}
-
-	// Read the image file
-	Mat frame = imread("adele-3.jpg");
+	// load image
+	Mat frame = imread("adele-0.jpg");
 	if (!frame.data){
 		cout << "File not loaded." << endl;
 		return -1;
 	}
-	cvtColor(frame, frame, COLOR_BGR2GRAY);
 
-	Mat face = Mat();
+	// face detection
+	FaceDetector faceDetector = FaceDetector();
+	Mat face = faceDetector.getFace(frame);
 
-	// Apply the classifier to the frame
-	if (!frame.empty()){
-		face = detectFace(frame, faceCascade);
-	}
-	else{
-		cout << "Frame is not loaded." << endl;
-	}
+	// measure sharpness
+
+
+
+
+
+	
+	
 
 	cout << variance_of_sobel(face) << endl;
 	imshow("Face", face);    // Show the result
@@ -76,37 +71,6 @@ int main()
 }
 
 
-
-Mat detectFace(Mat frame_gray, CascadeClassifier faceCascade)
-{
-	std::vector<Rect> faces;
-	Mat faceROI = Mat();
-	int neighbors = 3;
-
-	while (true){
-		faceCascade.detectMultiScale(frame_gray, faces, 1.1, neighbors, 0 | CV_HAAR_SCALE_IMAGE, Size(30, 30));
-		cout << "Neighbors: " << neighbors << " Face count:" << faces.size() << endl;
-
-		if (faces.size() == 0){
-			cout << "Faces not found. minNeighbors paramether = " << neighbors << endl;
-			break;
-		}
-
-		for (size_t i = 0; i < faces.size(); i++)
-		{
-			// cv::rectangle(frame_gray, cv::Rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height), Scalar(255, 0, 0));
-			faceROI = frame_gray(faces[i]);
-		}
-
-		if (faces.size() == 1){
-			break;
-		}
-
-		neighbors++;
-	}
-	
-	return faceROI;		
-}
 
 Mat fourierSpectrum(Mat frame)
 {
@@ -234,7 +198,7 @@ double variance_of_sobel(const Mat&img)
 
 	// imshow("sobel_dx", abs_grad_x);
 	// imshow("sobel_dy", abs_grad_y);
-	// imshow("sobel_gradient", gradient);
+	imshow("sobel_gradient", gradient);
 
 	Scalar mean;
 	Scalar deviation;
