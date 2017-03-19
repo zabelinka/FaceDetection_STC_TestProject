@@ -48,6 +48,7 @@ Mat FaceDetector::getFace(const Mat &frame){
 	return face;
 }
 
+// detect only one face on image
 Mat FaceDetector::detectFace(const Mat &frame_gray){
 	std::vector<Rect> faces;
 	Mat face;
@@ -70,6 +71,7 @@ Mat FaceDetector::detectFace(const Mat &frame_gray){
 		neighbors++;
 	}
 
+	imshow("Face", face);
 	return face;
 }
 
