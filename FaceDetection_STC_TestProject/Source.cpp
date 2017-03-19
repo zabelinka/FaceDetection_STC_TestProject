@@ -15,7 +15,7 @@ using namespace std;
 int main()
 {
 	// load image
-	Mat frame = imread("adele-0.jpg");
+	Mat frame = imread("adele-0.bmp");
 	if (!frame.data){
 		cout << "File not loaded." << endl;
 		return -1;
@@ -24,7 +24,7 @@ int main()
 	// face detection
 	FaceDetector faceDetector = FaceDetector();
 	Mat face = faceDetector.getFace(frame);
-
+	
 	// measure sharpness
 
 	// Method 1: Using Fourier Transformation and contrast
@@ -40,6 +40,9 @@ int main()
 
 	cout << "Sobel Deviation: " << SobelDeviation(face) << endl;
 	cout << "Laplacian Deviation: " << LaplacianDeviation(face) << endl;
+
+
+	// estimateDeviationWithDataset();
 
 	waitKey();
 	return 0;

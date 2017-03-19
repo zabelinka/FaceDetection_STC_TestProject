@@ -5,6 +5,8 @@
 
 #include <opencv2/opencv.hpp>
 
+#include "FaceDetection.h"
+
 using namespace cv;
 using namespace std;
 
@@ -52,5 +54,35 @@ double LaplacianDeviation(Mat image){
 
 	return deviation[0];
 }
+
+
+
+void estimateDeviationWithDataset()
+{
+	string dir = "dataset\\";
+	for (int i = 1; i <= 13; i++)
+	{
+		cout << "\n-----------------\nFRAME# " << i << endl;
+		Mat frame = imread(dir + to_string(i) + ".jpg");
+		if (!frame.data){
+			cout << "File not loaded." << endl;
+			return;
+		}
+		// imshow("source image" + to_string(i), frame);
+
+		// face detection
+		FaceDetector faceDetector = FaceDetector();
+		Mat face = faceDetector.getFace(frame);
+		
+		cout << "Sobel Deviation: " << SobelDeviation(face) << endl;
+		cout << "Laplacian Deviation: " << LaplacianDeviation(face) << endl;
+
+		imwrite(dir + to_string(i) + "face.jpg", face);
+		
+	}
+}
+
+
+
 
 #endif
